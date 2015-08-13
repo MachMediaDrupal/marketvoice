@@ -1,0 +1,4 @@
+name = mvnewsList
+description = Created customized lists and queries for news listing in View
+core = 7.x
+php = 5.2

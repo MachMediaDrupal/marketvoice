@@ -1,0 +1,88 @@
+<?php
+
+function mvnewsList_views_api() {
+    return array(
+        'api' => 3, 
+        );
+    }
+
+function mvnewsList_views_pre_execute(&$view) {
+
+$site_frontpage = variable_get('site_frontpage', 'node');
+list($first, $second) = explode('/', $site_frontpage, 2);
+if ($first == 'node' && is_numeric($second)) {
+  $front_node = $second;
+} else {
+  // It's not a node page.
+}
+if($view->name=='news_lists') {
+
+$query = db_select('field_data_field_news', 'dfn');
+$query->join('field_data_field_news_in_this_issue', 'dis', 'dfn.entity_id = dis.field_news_in_this_issue_value'); 
+$query->join('node', 'n', 'n.nid=dfn.field_news_target_id');//JOIN node with users
+$query->leftJoin('field_data_field_category', 'fdf', 'fdf.entity_id = n.nid');
+$query->join('taxonomy_term_data', 'ttd', 'fdf.field_category_tid =ttd.tid');
+$query->join('field_data_body', 'fdb', 'fdb.entity_id = n.nid');
+$query->fields('dfn',array('field_news_target_id'))//SELECT the fields from node
+      ->fields('n',array('title','nid'))
+      ->fields('ttd',array('name'))
+      ->fields('fdb',array('body_summary' ))
+      ->fields('fdb',array('body_value' ))
+      ->condition('dfn.bundle',"field_news_in_this_issue", '=')
+      ->condition('dis.entity_id',  $front_node ,'=')
+      ->orderBy('fdf.field_category_tid', 'DESC')
+      ->orderBy('created', 'DESC');
+
+$view->build_info['count_query'] = $query->countQuery();
+$offset = $view->query->pager->current_page * $view->query->limit;
+$query->range($offset, $view->query->limit);
+ 
+$view->build_info['query']=$query; 
+ 
+}
+
+if($view->name=='people_lists') {
+
+$query = db_select('field_data_field_people', 'dfn');
+$query->join('field_data_field_news_in_this_issue', 'dis', 'dfn.entity_id = dis.field_news_in_this_issue_value'); 
+$query->join('node', 'n', 'n.nid = dfn.field_people_target_id');//JOIN node with users
+$query->join('field_data_body', 'fdb', 'fdb.entity_id = n.nid');
+$query->fields('dfn',array('field_people_target_id'))//SELECT the fields from node
+      ->fields('n',array('title','nid'))
+      ->fields('fdb',array('body_summary' ))
+      ->fields('fdb',array('body_value' ))
+      ->condition('dfn.bundle',"field_news_in_this_issue", '=')
+      ->condition('dis.entity_id',  $front_node ,'=')
+      ->orderBy('created', 'DESC');
+
+$view->build_info['count_query'] = $query->countQuery();
+$offset = $view->query->pager->current_page * $view->query->limit;
+$query->range($offset, $view->query->limit);
+ 
+$view->build_info['query']=$query; 
+}
+
+if($view->name=='markets_lists') {
+
+$query = db_select('field_data_field_markets', 'dfn');
+$query->join('field_data_field_news_in_this_issue', 'dis', 'dfn.entity_id = dis.field_news_in_this_issue_value'); 
+$query->join('node', 'n', 'n.nid=dfn.field_markets_target_id');//JOIN node with users
+$query->join('field_data_body', 'fdb', 'fdb.entity_id = n.nid');
+$query->fields('dfn',array('field_markets_target_id'))//SELECT the fields from node
+      ->fields('n',array('title','nid'))
+      ->fields('fdb',array('body_summary' ))
+      ->fields('fdb',array('body_value' ))
+      ->condition('dfn.bundle',"field_news_in_this_issue", '=')
+      ->condition('dis.entity_id',  $front_node ,'=')
+      ->orderBy('created', 'ASC');
+
+$view->build_info['count_query'] = $query->countQuery();
+$offset = $view->query->pager->current_page * $view->query->limit;
+$query->range($offset, $view->query->limit);
+ 
+$view->build_info['query']=$query; 
+ 
+}
+
+
+}?>

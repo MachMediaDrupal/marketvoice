@@ -1,0 +1,132 @@
+/******************** Ember Style Overrides **************************/
+p, blockquote, pre, h1, h2, h3, h4, h5, h6, article, aside, details, figcaption, figure, footer, header, hgroup, nav, section, summary, dt, dd, li {
+    max-width: 100%;
+}
+
+.label-inline {
+    display: inline;
+}
+
+.block-devel {
+    clear: both;
+}
+
+#branding h1.title {
+    margin-top: 0;
+}
+
+.page-admin-accounts- #branding .page-title,
+.page-admin-members- #branding .page-title {
+    position: absolute;
+    right: 3rem;
+}
+
+/* Fix clearing on column lists */
+.admin .right.clearfix {
+    clear: none;
+}
+
+/* Fix for sort carat */
+.views-field.active {
+    position: relative;
+}
+
+/* Fix for hidden fieldsets in virtical tabs */
+div.vertical-tabs .vertical-tabs-panes .collapsible legend {
+    display: block;
+}
+div.vertical-tabs .vertical-tabs-panes .collapsed {
+    height: auto;
+}
+
+#edit-options ~ table {
+  clear: both;
+}
+
+/* Media Browser Fixes */
+
+/* Media Browser Thumbnails */
+#media-browser-library-list .media-item {
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+}
+#media-browser-library-list .form-type-checkbox {
+    display: none;
+}
+
+/* Media Browser Tabs */
+#media-browser-tabset ul.tabs.primary li a:link {
+    color: #444;
+}
+#media-browser-tabset ul.tabs.primary li.ui-state-active a {
+    color: #eee;
+}
+
+/* Media Browser Popup Titlebar */
+.ui-dialog .ui-dialog-titlebar {
+    background-color: #aaa;
+}
+
+/* Ctools Tables w/ dropdown buttons */
+td,
+tr[class*="ctools-"],
+td[class*="ctools-"],
+td[class*="operations"] {
+    overflow: visible;
+}
+
+/* CK Editor Styles [the editor itself] */
+body.cke_editable_themed {
+    padding: 0.75rem;
+}
+
+.cke_panel_container h2 {
+    font-size: medium;
+}
+
+/* Devel Krumo Orverrides */
+.krumo-root li {
+    max-width: none;
+}
+
+/* Make Notify Checkbox more pronounced */
+#edit-account .form-item-notify {
+    margin-top: 2rem;
+    font-size: 1.25rem;
+}
+
+/* fix alignment on views exposed widgets */
+.views-exposed-form .views-exposed-widget {
+    vertical-align: top;
+}
+.views-exposed-form label {
+   font-size: 1rem;
+}
+
+.views-exposed-form .views-exposed-widget .form-submit {
+    margin-top: 1.5rem;
+}
+
+/* fix content admin page exposed filters */
+#edit-filters div.exposed-filters .form-item {
+    margin-bottom: 0;
+}
+
+#edit-filters div.exposed-filters .form-item label {
+    position: relative;
+    top: 0;
+}
+
+#edit-filters div.exposed-filters div#edit-actions {
+    vertical-align: bottom;
+}
+
+#edit-filters div.exposed-filters .additional-filters {
+    padding: 0;
+    margin-bottom: 1rem;
+}
+
+#page.fade-in {
+  opacity: 100;
+}

@@ -1,0 +1,47 @@
+@media print {
+    body * {
+        font-family: Arial !important;
+       
+    }
+    .col-md-rt,.region-footer,.back-to-top, #mySlideToggler,.pager,iframe{
+    display:none !important;
+    }    
+    .col-md-lt{
+    float:none;width:100% !important;
+    }
+    img{
+       max-width:!00%;
+        }
+
+.print-header{
+display:block !important;text-align:center;
+background-color:#e6e7e8;
+height:251px;
+
+}
+.print-header img{
+display:inline-block !important;
+}
+
+h5{
+font-size: 18px !important;
+font-weight: 800 !important;
+padding-bottom:15px !important;
+color:#97c446 !important;
+}
+#header .container {
+display:none !important
+}
+.main-content article{
+display:block !important;}
+
+.widget-gallery-thumnail{
+display:none !important;}
+
+.content-wrapper .container{
+page-break-inside:avoid !important;
+}
+
+}
+
+ 

@@ -1,0 +1,12 @@
+<?php global $base_url;?> 
+                                   <li>
+                                       <div class="nl-list clearfix">
+                                           <h4><?php echo strtoupper($row->name)?> </h4>
+                                            <h5><?php echo $row->title?></h5>
+                                            <p>
+                                                <?php if(trim($row->body_summary)!="") echo $row->body_summary;
+else  echo $row->body_value;?>
+                                            </p>
+                                       </div>
+                                   </li>
+ 

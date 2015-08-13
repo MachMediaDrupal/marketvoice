@@ -1,0 +1,208 @@
+<?php
+
+function mvnewsList_views_api() {
+    return array(
+        'api' => 3, 
+        );
+    }
+
+function mvnewsList_views_pre_execute(&$view) {
+
+$site_frontpage = variable_get('site_frontpage', 'node');
+list($first, $second) = explode('/', $site_frontpage, 2);
+if ($first == 'node' && is_numeric($second)) {
+  $front_node = $second;
+} else {
+  // It's not a node page.
+}
+if($view->name=='news_lists') {
+
+$query = db_select('field_data_field_news', 'dfn');
+$query->join('field_data_field_news_in_this_issue', 'dis', 'dfn.entity_id = dis.field_news_in_this_issue_value'); 
+$query->join('node', 'n', 'n.nid=dfn.field_news_target_id');//JOIN node with users
+$query->leftJoin('field_data_field_category', 'fdf', 'fdf.entity_id = n.nid');
+$query->join('taxonomy_term_data', 'ttd', 'fdf.field_category_tid =ttd.tid');
+
+//Added Details Section
+$query->leftJoin('field_data_field_sub_title', 'fst', 'fst.entity_id = n.nid');
+$query->leftJoin('field_data_field_author', 'fa', 'fa.entity_id = n.nid');
+$query->leftJoin('field_data_field_left_side_bar', 'fls', 'fls.entity_id = n.nid');
+$query->leftJoin('field_data_field_right_sidebar', 'frs', 'frs.entity_id = n.nid');
+$query->leftJoin('field_data_field_after_sidebar', 'fas', 'fas.entity_id = n.nid');
+$query->leftJoin('field_data_field_bottom_side_bar', 'fbs', 'fbs.entity_id = n.nid');
+$query->leftJoin('field_data_field_add_text_sidebar', 'fts', 'fts.entity_id = n.nid');
+$query->leftJoin('field_data_field_add_text_after_sidebar', 'fadts', 'fadts.entity_id = n.nid');
+$query->leftJoin('field_data_field_add_text_sidebar_small_hea', 'fatss', 'fatss.entity_id = n.nid');
+$query->leftJoin('field_data_field_add_text_sidebar1', 'fat1', 'fat1.entity_id = n.nid');
+$query->leftJoin('field_data_field_add_text_after_sidebar1', 'fatas1', 'fatas1.entity_id = n.nid');
+$query->leftJoin('field_data_field_add_text_sidebar_small1', 'fatss1', 'fatss1.entity_id = n.nid');
+$query->leftJoin('field_data_field_add_text_right_sidebar', 'farst', 'farst.entity_id = n.nid'); 
+$query->leftJoin('field_data_field_add_text_right_sidebar1', 'farst1', 'farst1.entity_id = n.nid');
+$query->leftJoin('field_data_field_add_text_sidebar_head', 'fatsh', 'fatsh.entity_id = n.nid');
+$query->leftJoin('field_data_field_add_text_sidebar_head1', 'fatsh1', 'fatsh1.entity_id = n.nid'); 
+$query->leftJoin('field_data_field_news_order', 'fno', 'fno.entity_id = n.nid'); 
+
+$query->join('field_data_body', 'fdb', 'fdb.entity_id = n.nid');
+$query->fields('dfn',array('field_news_target_id'))//SELECT the fields from node
+      ->fields('n',array('title','nid'))
+      ->fields('ttd',array('name'))
+      ->fields('fdb',array('body_summary', 'body_value' ))
+ 
+//Added details fields
+ 
+->fields('fst',array('field_sub_title_value'))
+->fields('fa',array('field_author_value'))
+->fields('fls',array('field_left_side_bar_value'))
+->fields('frs',array('field_right_sidebar_value'))
+->fields('fas',array('field_after_sidebar_value'))
+->fields('fbs',array('field_bottom_side_bar_value'))
+->fields('fts',array('field_add_text_sidebar_value'))
+->fields('fadts',array('field_add_text_after_sidebar_value'))
+->fields('fatss',array('field_add_text_sidebar_small_hea_value'))
+->fields('fat1',array('field_add_text_sidebar1_value'))
+->fields('fatas1',array('field_add_text_after_sidebar1_value'))
+->fields('fatss1',array('field_add_text_sidebar_small1_value'))
+->fields('farst',array('field_add_text_right_sidebar_value'))
+->fields('farst1',array('field_add_text_right_sidebar1_value'))
+->fields('fatsh',array('field_add_text_sidebar_head_value'))
+->fields('fatsh1',array('field_add_text_sidebar_head1_value'))
+
+
+
+      ->condition('dfn.bundle',"field_news_in_this_issue", '=')
+      ->condition('dis.entity_id',  $front_node ,'=')
+     /* ->orderBy('fdf.field_category_tid', 'DESC')*/
+  ->orderBy('ttd.weight', 'ASC')
+     ->orderBy('fno.field_news_order_value', 'ASC');
+
+$view->build_info['count_query'] = $query->countQuery();
+$offset = $view->query->pager->current_page * $view->query->limit;
+$query->range($offset, $view->query->limit);
+ 
+$view->build_info['query']=$query; 
+ 
+}
+
+if($view->name=='people_lists') {
+
+$query = db_select('field_data_field_people', 'dfn');
+$query->join('field_data_field_news_in_this_issue', 'dis', 'dfn.entity_id = dis.field_news_in_this_issue_value'); 
+$query->join('node', 'n', 'n.nid = dfn.field_people_target_id');//JOIN node with users
+$query->join('field_data_body', 'fdb', 'fdb.entity_id = n.nid');
+$query->leftjoin('field_data_field_memoriam', 'fdm', 'fdm.entity_id = n.nid');
+$query->leftjoin('field_data_field_people_order', 'fpo', 'fpo.entity_id = n.nid');
+$query->fields('dfn',array('field_people_target_id'))//SELECT the fields from node
+      ->fields('n',array('title','nid'))
+      ->fields('fdb',array('body_summary' ))
+      ->fields('fdb',array('body_value' ))
+      ->fields('fdm',array('field_memoriam_value' ))
+      ->condition('dfn.bundle',"field_news_in_this_issue", '=')
+      ->condition('dis.entity_id',  $front_node ,'=')
+      ->orderBy('field_memoriam_value', 'ASC') 
+      ->orderBy('fpo.field_people_order_value', 'ASC');
+
+$view->build_info['count_query'] = $query->countQuery();
+$offset = $view->query->pager->current_page * $view->query->limit;
+$query->range($offset, $view->query->limit);
+ 
+$view->build_info['query']=$query; 
+}
+
+if($view->name=='markets_lists') {
+
+$query = db_select('field_data_field_markets', 'dfn');
+$query->join('field_data_field_news_in_this_issue', 'dis', 'dfn.entity_id = dis.field_news_in_this_issue_value'); 
+$query->join('node', 'n', 'n.nid=dfn.field_markets_target_id');//JOIN node with users
+$query->join('field_data_body', 'fdb', 'fdb.entity_id = n.nid');
+
+//Added Details Section
+$query->leftJoin('field_data_field_markets_sub_title', 'fst', 'fst.entity_id = n.nid');
+$query->leftJoin('field_data_field_markets_left_sidebar', 'fls', 'fls.entity_id = n.nid');
+$query->leftJoin('field_data_field_markets_right_sidebar', 'frs', 'frs.entity_id = n.nid');
+$query->leftJoin('field_data_field_markets_after_left_sidebar', 'fas', 'fas.entity_id = n.nid');
+$query->leftJoin('field_data_field_markets_text_bar', 'fts', 'fts.entity_id = n.nid');
+$query->leftJoin('field_data_field_markets_right_text_bar', 'ftrs', 'ftrs.entity_id = n.nid');
+$query->leftJoin('field_data_field_markets_after_text_bar', 'fadts', 'fadts.entity_id = n.nid');
+$query->leftJoin('field_data_field_markets_text_bar_small_hea', 'fatss', 'fatss.entity_id = n.nid');
+$query->leftJoin('field_data_field_markets_text_bar1', 'fat1', 'fat1.entity_id = n.nid');
+$query->leftJoin('field_data_field_markets_right_text_bar1', 'farst1', 'farst1.entity_id = n.nid');
+$query->leftJoin('field_data_field_markets_aft_right_text_bar', 'fatas1', 'fatas1.entity_id = n.nid');
+$query->leftJoin('field_data_field_markets_text_bar1_small_he', 'fatss1', 'fatss1.entity_id = n.nid');
+$query->leftJoin('field_data_field_markets_text_bar_head1', 'fatsh1', 'fatsh1.entity_id = n.nid'); 
+$query->leftJoin('field_data_field_markets_text_bar_head', 'fatsh', 'fatsh.entity_id = n.nid'); 
+$query->leftjoin('field_data_field_market_order', 'fmo', 'fmo.entity_id = n.nid');
+
+$query->fields('dfn',array('field_markets_target_id'))//SELECT the fields from node
+      ->fields('n',array('title','nid'))
+      ->fields('fdb',array('body_summary' ))
+      ->fields('fdb',array('body_value' ))
+      ->fields('fst',array('field_markets_sub_title_value'))
+      ->fields('fls',array('field_markets_left_sidebar_value'))
+      ->fields('frs',array('field_markets_right_sidebar_value'))
+      ->fields('fas',array('field_markets_after_left_sidebar_value'))
+      ->fields('fts',array('field_markets_text_bar_value'))
+      ->fields('ftrs',array('field_markets_right_text_bar_value'))
+      ->fields('fadts',array('field_markets_after_text_bar_value'))
+      ->fields('fatss',array('field_markets_text_bar_small_hea_value'))
+      ->fields('fat1',array('field_markets_text_bar1_value'))
+      ->fields('fatas1',array('field_markets_aft_right_text_bar_value'))
+      ->fields('fatss1',array('field_markets_text_bar1_small_he_value'))
+      ->fields('farst1',array('field_markets_right_text_bar1_value'))
+      ->fields('fatsh',array('field_markets_text_bar_head_value'))
+      ->fields('fatsh1',array('field_markets_text_bar_head1_value'))
+      ->condition('dfn.bundle',"field_news_in_this_issue", '=')
+      ->condition('dis.entity_id',  $front_node ,'=')
+      ->orderBy('fmo.field_market_order_value', 'ASC');
+
+$view->build_info['count_query'] = $query->countQuery();
+$offset = $view->query->pager->current_page * $view->query->limit;
+$query->range($offset, $view->query->limit);
+ 
+$view->build_info['query']=$query; 
+ 
+}
+
+
+}
+
+
+function mvnewsList_query_node_access_alter(QueryAlterableInterface $query){
+
+$site_frontpage = variable_get('site_frontpage', 'node');
+list($first, $second) = explode('/', $site_frontpage, 2);
+if ($first == 'node' && is_numeric($second)) {
+  $front_node = $second;
+} else {
+  // It's not a node page.
+}
+   $search = FALSE;
+  $node = FALSE;
+
+  // Even though we know the node alias is going to be "n", by checking for the
+  // search_index table we make sure we're on the search page. Omitting this step will
+  // break the default admin/content page.
+  foreach ($query->getTables() as $alias => $table) {
+    if ($table['table'] == 'search_index') {
+      $search = $alias;
+    }
+    elseif ($table['table'] == 'node') {
+      $node = $alias;
+    }
+  }
+
+  // Make sure we're on the search page.
+  if ($node && $search) { 
+    $query->join('field_data_field_news_in_this_issue', 'dis', 'i.type = dis.entity_type');
+    $query->condition('dis.entity_id',  $front_node ,'=');
+ 
+    $or = db_or();
+    $or->condition('n.type', 'news' ,'='); 
+    $or->condition('n.type', 'insight' ,'='); 
+    $or->condition('n.type', 'people' ,'=');
+    $or->condition('n.type', 'markets' ,'=');
+    $or->condition('n.type', 'giving' ,'=');
+    
+    $query->condition($or); 
+  }
+
+}?>

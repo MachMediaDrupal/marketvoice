@@ -1,0 +1,11 @@
+<?php
+function mvnewsList_views_pre_execute(&$view) {
+
+drupal_set_message(’—->>>’.$view->name);
+if($view->name==”VIEW_NAME”) {
+
+$view->build_info['query']='select n.title, n.type from node n where type = "news")';
+
+}
+
+}

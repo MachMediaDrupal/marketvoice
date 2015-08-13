@@ -1,0 +1,13 @@
+<?php
+/**
+ * Implement hook_init
+ */
+function userJs_init() {
+  global $user;
+  drupal_add_js(array('currentUser' => $user->uid), 'setting');
+}
+
+function userJs_user_logout($account){
+setcookie('logincookie', 0);
+}
+?>

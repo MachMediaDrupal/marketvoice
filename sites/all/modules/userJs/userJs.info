@@ -1,0 +1,4 @@
+name = userJs
+description = Created customized module to get user logged in details of drupal to jquery
+core = 7.x
+php = 5.2

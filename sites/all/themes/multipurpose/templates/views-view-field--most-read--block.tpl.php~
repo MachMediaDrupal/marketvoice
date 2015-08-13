@@ -1,0 +1,10 @@
+<ul>
+    <li>
+      <div class="clearfix">
+           <figcaption>
+               <a href="#"><?php print_r($row); ?>
+               <span>2 days ago</span></a>
+           </figcaption>
+       </div>
+    </li>
+</ul>

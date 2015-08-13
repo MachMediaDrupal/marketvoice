@@ -1,0 +1,8 @@
+name = customadminmenu
+description = "Menu to admin"
+ 
+version = "7.x-1.4"
+core = "7.x"
+project = "customadminmenu"
+ 
+
