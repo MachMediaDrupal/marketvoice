@@ -2243,7 +2243,7 @@ a {
 }
 /* line 104, ../sass/_main.scss */
 .share-social ul {
-  border-bottom: 1px solid #97cef4;
+  /* border-bottom: 1px solid #97cef4; rm 20150813 JW */
   padding: 12px 0px 12px 0px;
 }
 /* line 106, ../sass/_main.scss */
